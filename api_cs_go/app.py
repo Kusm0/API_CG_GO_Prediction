@@ -1,13 +1,12 @@
-from flask import Flask, request, jsonify
+import flask
+from flask import Flask, request, jsonify, render_template
 from flasgger import Swagger
-from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report
 import random
-from dataframes import df, team_names, team_data
+from dataframes import df, team_data, present_teams
 from LogRegModel import model, evaluate_model
 from split_function import split_func
 from match import match_between, tournament
-import pandas as pd
 
 app = Flask(__name__)
 Swagger(app)
@@ -16,10 +15,11 @@ Swagger(app)
 X_train, X_test, y_train, y_test = split_func(df)
 # Отримання значень колонки 'id' у вигляді списку
 team_id_list = team_data['match|summaryStats|team_combined|TeamId|$numberLong'].tolist()
-print(team_id_list)
+
+api_bp = flask.Blueprint('api', __name__, url_prefix='/api')
 
 
-@app.route('/match_between', methods=['POST'])
+@api_bp.route('/match_between', methods=['POST'])
 def match_between_endpoint():
     """
     Predict the winner between two teams
@@ -53,7 +53,7 @@ def match_between_endpoint():
     return jsonify(result)
 
 
-@app.route('/get_metrics', methods=['GET'])
+@api_bp.route('/get_metrics', methods=['GET'])
 def get_metrics():
     """
     Get metrics of the trained model
@@ -72,7 +72,7 @@ def get_metrics():
     return jsonify({'accuracy': accuracy, 'classification_report': report})
 
 
-@app.route('/simulate_tournament', methods=['POST'])
+@api_bp.route('/simulate_tournament', methods=['POST'])
 def simulate_tournament():
     """
     Simulate a tournament with 8 teams
@@ -97,9 +97,6 @@ def simulate_tournament():
     data = request.json
     teams = data.get('teams')
 
-    if not teams or len(teams) != 8:
-        return jsonify({'error': 'You must provide exactly 8 team IDs.'}), 400
-
     try:
         result = tournament(teams)
         return jsonify(result)
@@ -107,7 +104,7 @@ def simulate_tournament():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/simulate_random_tournament', methods=['GET'])
+@api_bp.route('/simulate_random_tournament', methods=['GET'])
 def simulate_random_tournament():
     """
     Simulate a random tournament with 8 teams selected from the predefined team_id_list
@@ -127,5 +124,29 @@ def simulate_random_tournament():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@api_bp.route('/get_teams', methods=['GET'])
+def get_teams():
+    json_data = present_teams.to_json(orient='records', lines=False)
+    try:
+        return json_data
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/', methods=['GET'])
+def index():
+    """
+    Index page
+    """
+    try:
+        return render_template('index.html')
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+app.register_blueprint(api_bp)
+
+
 if __name__ == '__main__':
+    app.jinja_env.auto_reload = True
     app.run(debug=True)

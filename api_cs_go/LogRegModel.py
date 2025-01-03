@@ -3,8 +3,8 @@ import torch.nn as nn
 from dataframes import team_data
 import warnings
 
-
 warnings.simplefilter(action='ignore', category=FutureWarning)
+
 
 class LogisticRegressionModel(nn.Module):
     def __init__(self, input_dim):
@@ -13,6 +13,7 @@ class LogisticRegressionModel(nn.Module):
 
     def forward(self, x):
         return torch.sigmoid(self.linear(x))
+
 
 def evaluate_model(model, X, y):
     with torch.no_grad():
