@@ -1,4 +1,6 @@
 import torch
+from sklearn.preprocessing import StandardScaler
+
 from dataframes import all_teams, team_data
 from LogRegModel import model
 import warnings
@@ -25,19 +27,36 @@ def get_team_id_by_name(team_name, df=all_teams):
 def match_between(id_team_1, id_team_2):
     team1_data = team_data[team_data['match|summaryStats|team_combined|TeamId|$numberLong'] == id_team_1]
     team2_data = team_data[team_data['match|summaryStats|team_combined|TeamId|$numberLong'] == id_team_2]
+
+    # Ensure both teams have data
     if team2_data.empty or team1_data.empty:
         raise Exception(f'One of the teams does not exist: {id_team_1}:{team1_data}/{id_team_2}:{team2_data}')
 
+    # Drop the TeamId column
+    team1_data = team1_data.drop(columns=['match|summaryStats|team_combined|TeamId|$numberLong'])
+    team2_data = team2_data.drop(columns=['match|summaryStats|team_combined|TeamId|$numberLong'])
+
+    # Take the first row of data for each team
     team1_data = team1_data.iloc[0]
     team2_data = team2_data.iloc[0]
 
+    # Calculate the combined data
     delta = 1.01
-    combined_data = (team2_data + delta) - (team1_data + delta)
-    # scaler = StandardScaler()
-    # combined_data_scaled = scaler.fit_transform(combined_data.values.reshape(1, -1))
+    combined_data = (team1_data + delta) / (team2_data + delta)
 
-    tournament_tensor = torch.tensor(combined_data.values, dtype=torch.float32)
-    winner = (model(tournament_tensor) > 0.5).float().numpy()
+    # Standardize the combined data
+    scaler = StandardScaler()
+    combined_data_scaled = scaler.fit_transform(combined_data.values.reshape(-1, 1)).flatten()
+
+    # Convert the scaled data to a PyTorch tensor
+    tournament_tensor = torch.tensor([combined_data_scaled], dtype=torch.float32)
+
+    result = model(tournament_tensor)
+
+    # Use the tensor with your model and perform inference
+    winner = (result > 0.5).float().numpy()
+
+    print(result)
 
     if winner[0] == 1.0:
         return {'winner': 'Team 1', 'team_name': get_team_name_by_id(id_team_1, all_teams)}
@@ -70,7 +89,10 @@ def tournament(teams):
         round_name = f'round_{tournament_round}'
         results[round_name] = []
         for i in range(0, len(teams), 2):
-            match_result = match_between(teams[i], teams[i + 1])
+            try:
+                match_result = match_between(teams[i], teams[i + 1])
+            except Exception as e:
+                raise e
             winner_id = teams[i] if match_result['winner'] == 'Team 1' else teams[i + 1]
             results[round_name].append({
                 'team1': get_team_name_by_id(teams[i]),

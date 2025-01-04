@@ -18,7 +18,10 @@
 <body>
 <div class="teams_list hidden">
     <div class="close">
-        <svg clip-rule="evenodd" fill="#FFFFFF" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12 10.93 5.719-5.72c.146-.146.339-.219.531-.219.404 0 .75.324.75.749 0 .193-.073.385-.219.532l-5.72 5.719 5.719 5.719c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.385-.073-.531-.219l-5.719-5.719-5.719 5.719c-.146.146-.339.219-.531.219-.401 0-.75-.323-.75-.75 0-.192.073-.384.22-.531l5.719-5.719-5.72-5.719c-.146-.147-.219-.339-.219-.532 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"/></svg>
+        <svg clip-rule="evenodd" fill="#FFFFFF" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2"
+             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="m12 10.93 5.719-5.72c.146-.146.339-.219.531-.219.404 0 .75.324.75.749 0 .193-.073.385-.219.532l-5.72 5.719 5.719 5.719c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.385-.073-.531-.219l-5.719-5.719-5.719 5.719c-.146.146-.339.219-.531.219-.401 0-.75-.323-.75-.75 0-.192.073-.384.22-.531l5.719-5.719-5.72-5.719c-.146-.147-.219-.339-.219-.532 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"/>
+        </svg>
     </div>
     <div class="search_wrapper">
         <input placeholder="Name/Id" type="text" class="teams_list_search">
@@ -26,14 +29,24 @@
     <div class="teams" id="Teams">
     </div>
 </div>
-
 <section id="bracket">
-    <select id="numberOfTeams">
-        <option value="4">4</option>
-        <option value="8">8</option>
-        <option value="16" selected="">16</option>
-        <option value="32">32</option>
-    </select>
+    <div class="controls">
+        <select id="numberOfTeams">
+            <option value="4">4</option>
+            <option value="8">8</option>
+            <option value="16" selected="">16</option>
+            <option value="32">32</option>
+        </select>
+        <button class="start_tournament">
+            Start
+        </button>
+        <button class="random_tournament">
+            Randomize
+        </button>
+        <button class="clear_tournament">
+            Clear
+        </button>
+    </div>
     <div class="container">
         <div class="split split-one">
 
@@ -44,17 +57,6 @@
         </div>
         <div class="split split-two">
 
-        </div>
-        <div class="control_buttons">
-            <button class="start_tournament">
-                Start
-            </button>
-            <button class="random_tournament">
-                Randomize
-            </button>
-            <button class="clear_tournament">
-                Clear
-            </button>
         </div>
     </div>
 </section>

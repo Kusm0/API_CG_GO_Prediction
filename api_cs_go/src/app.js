@@ -207,6 +207,7 @@ $('.start_tournament').off('click').on('click', async function (e) {
     let matches = result['matches'];
     let rounds = Object.keys(matches).length;
     console.log(result, rounds)
+    $('.clear_tournament').trigger('click')
     for (let i = 1; i < rounds+1; i++) {
         let matchups;
         if (i===rounds){
@@ -231,6 +232,11 @@ $('.start_tournament').off('click').on('click', async function (e) {
             }).remove();
             $(team2).append(round[j]['team2']);
             $(team2).addClass(team1_winner?'loser':'winner');
+
+            if (i === 1){
+                $(team1).attr('data-team-id', round[j]['team1_id']);
+                $(team2).attr('data-team-id', round[j]['team2_id']);
+            }
         }
     }
 })

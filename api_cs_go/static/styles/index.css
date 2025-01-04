@@ -86,12 +86,10 @@ body {
 }
 
 #bracket {
-    overflow: hidden;
     background-color: #e1e1e1;
     background-color: rgba(225, 225, 225, 0.9);
-    padding-top: 20px;
     font-size: 12px;
-    padding: 40px 0;
+    padding-bottom: 20px;
 }
 
 .container {
@@ -558,4 +556,25 @@ body {
 
 .error_unset{
     border: 2px solid red !important;
+}
+
+.controls{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100px;
+}
+
+.controls *{
+    padding: 10px 20px;
+    background-color: #2C7399;
+    color: #fcfcfc;
+    outline: none;
+    border: none;
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0px 5px;
+    border-radius: 5px;
 }
