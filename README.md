@@ -13,27 +13,6 @@ This project provides an API to predict CS:GO match outcomes and simulate tourna
 - **Team Information**: Retrieves detailed information about available teams.
 - **Model Metrics**: Provides metrics like accuracy and classification reports for the trained model.
 
-## Project Structure
-
-```plaintext
-api_cs_go/
-├── data/                # Data files used by the application
-├── src/                 # Source code
-├── static/              # Static files (e.g., CSS, JS)
-├── templates/           # HTML templates for rendering
-├── app.py               # Flask app entry point
-├── dataframes.py        # Data preprocessing and management
-├── LogRegModel.py       # Logistic regression model implementation
-├── match.py             # Match and tournament logic
-├── split_function.py    # Data splitting functions
-├── model_id_combined_73.pth  # Trained model file
-├── model_no_id_705.pth       # Another model file
-├── Pipfile              # Pipenv dependency file
-├── Pipfile.lock         # Locked dependencies
-├── package.json         # Frontend dependencies
-├── vite.config.js       # Vite configuration for frontend
-```
-
 ## Requirements
 
 - **Backend**:
